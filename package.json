@@ -1,18 +1,36 @@
 {
-  "name": "pictionary-app",
-  "version": "0.1.0",
-  "private": true,
+  "name": "react-pictionary",
+  "version": "1.0.0",
+  "description": "This is my attempt at creating a real-time multiplayer pictionary game using React and Redux.",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chungeric/react-pictionary.git"
+  },
+  "author": "Eric Chung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chungeric/react-pictionary/issues"
+  },
+  "homepage": "https://github.com/chungeric/react-pictionary#readme",
   "dependencies": {
+    "path": "^0.12.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "1.0.17"
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.10.1"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.8",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.1"
   }
 }
