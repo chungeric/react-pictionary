@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import Chat from './chat';
-import Game from './game';
+import Canvas from './canvas';
+import css from '../styles/app.scss';
 
 class App extends Component {
   render() {
     return (
-      <div>
-        <Game />
-        <Chat />
-      </div>
+        <div className="app">
+          <div className="container">
+            <div className="row">
+              <Canvas />
+              <Chat />
+            </div>
+          </div>
+        </div>
     );
   }
 }

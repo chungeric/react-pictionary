@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import css from '../styles/game.scss';
+import css from '../styles/canvas.scss';
 import io from 'socket.io-client';
 
-class Game extends Component {
+class Canvas extends Component {
   constructor(props) {
     super(props);
     this.findNewCoords = this.findNewCoords.bind(this);
-
     this.state = {
       ctx: null,
       x: 0,
@@ -17,9 +16,9 @@ class Game extends Component {
 
   componentDidMount() {
     this.socket = io();
-    this.socket.on('draw', (data) => {
-      console.log("draw event received on client");
-      this.draw(data.x, data.y, data.e);
+
+    this.socket.on('draw', ({ x, y, e }) => {
+      this.draw(x, y, e);
     });
 
     this.addCanvasEventListener("mousedown");
@@ -27,7 +26,8 @@ class Game extends Component {
     this.addCanvasEventListener("mousemove");
     this.addCanvasEventListener("mouseout");
 
-    this.setState({ctx: document.getElementById("canvas").getContext("2d")});
+    let ctx = document.getElementById("canvas").getContext("2d");
+    this.setState({ ctx });
   }
 
   addCanvasEventListener(event) {
@@ -83,11 +83,11 @@ class Game extends Component {
 
   render() {
     return (
-      <div className="game col-md-7">
-        <canvas id="canvas" width="500" height="500"></canvas>
+      <div className="canvas col-md-9">
+        <canvas id="canvas" width="700" height="500"></canvas>
       </div>
     );
   }
 }
 
-export default Game;
+export default Canvas;

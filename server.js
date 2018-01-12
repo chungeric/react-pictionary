@@ -17,10 +17,8 @@ app.use(webpackDevMiddleware(webpack(webpackConfig)));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 io.on('connection', (socket) => {
-  console.log("a user connected");
-  socket.on('draw', (data) => {
-    console.log("draw event triggered in server");
-    socket.broadcast.emit('draw', { x: data.x, y: data.y, e: data.e });
+  socket.on('draw', ({ x, y, e }) => {
+    socket.broadcast.emit('draw', { x, y, e });
   });
 });
 
