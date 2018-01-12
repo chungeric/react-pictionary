@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.js',
@@ -15,5 +16,8 @@ module.exports = {
   devServer: {
     publicPath: "/",
     contentBase: "./dist"
-  }
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({minimize: true})
+  ]
 }

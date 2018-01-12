@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import css from '../styles/game.scss';
+import io from 'socket.io-client';
 
 class Game extends Component {
   constructor(props) {
@@ -8,79 +9,77 @@ class Game extends Component {
 
     this.state = {
       ctx: null,
-      currX: 0,
-      currY: 0,
-      prevX: 0,
-      prevY: 0,
+      x: 0,
+      y: 0,
       pressed: false
     };
   }
 
   componentDidMount() {
-    this.setState({ctx: document.getElementById("canvas").getContext("2d")});
+    this.socket = io();
+    this.socket.on('draw', (data) => {
+      console.log("draw event received on client");
+      this.draw(data.x, data.y, data.e);
+    });
+
     this.addCanvasEventListener("mousedown");
     this.addCanvasEventListener("mouseup");
     this.addCanvasEventListener("mousemove");
     this.addCanvasEventListener("mouseout");
+
+    this.setState({ctx: document.getElementById("canvas").getContext("2d")});
   }
 
   addCanvasEventListener(event) {
+    const canvas = document.getElementById("canvas");
     canvas.addEventListener(event, (e) => {
       this.findNewCoords(event, e);
     });
   }
 
-  draw() {
-    const { ctx, currX, currY, prevX, prevY } = this.state;
-    ctx.beginPath();
-    ctx.moveTo(prevX, prevY);
-    ctx.lineTo(currX, currY);
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.closePath();
+  draw(x, y, e) {
+    const { ctx } = this.state;
+    if (e == "mousedown") {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+    }
+    else if (e == "mousemove") {
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+    else if (e == "mouseout" || e == "mouseup" ) {
+      ctx.closePath();
+    }
   }
 
   findNewCoords(e, mouse) {
-    let { ctx, pressed, currX, currY, prevX, prevY } = this.state;
-    let dot_flag = false;
+    let { ctx, pressed, x, y } = this.state;
 
     if (e == "mousedown") {
-      prevX = currX;
-      prevY = currY;
-      currX = mouse.offsetX;
-      currY = mouse.offsetY;
+      x = mouse.offsetX;
+      y = mouse.offsetY;
       pressed = true;
-      dot_flag = true;
-      if (dot_flag) {
-        this.drawDot(ctx, currX, currY);
-        dot_flag = false;
-      }
-      this.setState({ prevX, prevY, currX, currY, pressed });
+      this.setState({ x, y, pressed });
+      this.draw(x, y, e);
+      this.socket.emit('draw', { x, y, e });
     }
 
     if (e == "mouseout" || e == "mouseup") {
+      this.draw(x, y, e);
+      this.socket.emit('draw', { x, y, e });
       this.setState({pressed: false});
     }
 
     if (e == "mousemove" && pressed) {
-      prevX = currX;
-      prevY = currY;
-      currX = mouse.offsetX;
-      currY = mouse.offsetY;
-      this.setState({ prevX, prevY, currX, currY });
-      this.draw();
+      x = mouse.offsetX;
+      y = mouse.offsetY;
+      this.setState({ x, y });
+      this.draw(x, y, e);
+      this.socket.emit('draw', { x, y, e });
     }
   }
-
-
-  drawDot(ctx, x, y) {
-    ctx.beginPath();
-    ctx.fillRect(x, y, 2, 2);
-    ctx.stroke();
-    ctx.closePath();
-  }
-
 
   render() {
     return (
