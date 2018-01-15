@@ -1,3 +1,11 @@
 .chat {
-  color: orange;
+  color: black;
+  border: 2px solid #000000;
+  width: 30%;
+  height: 500px;
+
+  input {
+    width: 100%;
+
+  }
 }

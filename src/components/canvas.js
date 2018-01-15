@@ -21,17 +21,25 @@ class Canvas extends Component {
       this.draw(x, y, e);
     });
 
-    this.addCanvasEventListener("mousedown");
-    this.addCanvasEventListener("mouseup");
-    this.addCanvasEventListener("mousemove");
-    this.addCanvasEventListener("mouseout");
-
-    let ctx = document.getElementById("canvas").getContext("2d");
+    let canvas = document.getElementById("canvas");
+    const ctx = this.setupCanvas(canvas);
     this.setState({ ctx });
+
   }
 
-  addCanvasEventListener(event) {
-    const canvas = document.getElementById("canvas");
+  setupCanvas(canvas) {
+    this.addCanvasEventListener("mousedown", canvas);
+    this.addCanvasEventListener("mouseup", canvas);
+    this.addCanvasEventListener("mousemove", canvas);
+    this.addCanvasEventListener("mouseout", canvas);
+    let parent = canvas.parentNode.getBoundingClientRect();
+
+    canvas.width = parent.width;
+    canvas.height = parent.height;
+    return canvas.getContext("2d");
+  }
+
+  addCanvasEventListener(event, canvas) {
     canvas.addEventListener(event, (e) => {
       this.findNewCoords(event, e);
     });
@@ -83,8 +91,8 @@ class Canvas extends Component {
 
   render() {
     return (
-      <div className="canvas col-md-9">
-        <canvas id="canvas" width="700" height="500"></canvas>
+      <div className="canvas">
+        <canvas id="canvas" width="100%" height="100%"></canvas>
       </div>
     );
   }

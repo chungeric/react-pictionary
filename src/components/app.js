@@ -7,12 +7,8 @@ class App extends Component {
   render() {
     return (
         <div className="app">
-          <div className="container">
-            <div className="row">
-              <Canvas />
-              <Chat />
-            </div>
-          </div>
+            <Canvas />
+            <Chat />
         </div>
     );
   }
