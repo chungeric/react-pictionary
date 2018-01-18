@@ -3,7 +3,10 @@
   border: 2px solid #000000;
   width: 30%;
   height: 500px;
+  min-width: 200px;
   position: relative;
+  display: inline-block;
+  background: #ddd;
 
   input {
     width: 100%;

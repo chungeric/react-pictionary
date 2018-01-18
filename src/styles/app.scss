@@ -1,4 +1,8 @@
 .app {
-  margin-top: 20px;
-  display: grid;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  width: 80%;
+  margin: 0 auto;
+  padding-top: 20px;
 }

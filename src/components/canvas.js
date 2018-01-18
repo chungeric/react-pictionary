@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import css from '../styles/canvas.scss';
 import io from 'socket.io-client';
+import resizeCanvas from 'resize-canvas';
 
 class Canvas extends Component {
   constructor(props) {
@@ -16,7 +17,6 @@ class Canvas extends Component {
 
   componentDidMount() {
     this.socket = io();
-
     this.socket.on('draw', ({ x, y, e }) => {
       this.draw(x, y, e);
     });
@@ -32,10 +32,10 @@ class Canvas extends Component {
     this.addCanvasEventListener("mouseup", canvas);
     this.addCanvasEventListener("mousemove", canvas);
     this.addCanvasEventListener("mouseout", canvas);
-    let parent = canvas.parentNode.getBoundingClientRect();
 
-    canvas.width = parent.width;
-    canvas.height = parent.height;
+    // let parent = canvas.parentNode.getBoundingClientRect();
+    // canvas.width = parent.width;
+    // canvas.height = parent.height;
     return canvas.getContext("2d");
   }
 
@@ -92,7 +92,7 @@ class Canvas extends Component {
   render() {
     return (
       <div className="canvas">
-        <canvas id="canvas" width="100%" height="100%"></canvas>
+        <canvas id="canvas" width="700" height="500"></canvas>
       </div>
     );
   }
