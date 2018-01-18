@@ -3,9 +3,11 @@
   border: 2px solid #000000;
   width: 30%;
   height: 500px;
+  position: relative;
 
   input {
     width: 100%;
-
+    position: absolute;
+    bottom: 0;
   }
 }
