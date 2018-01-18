@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import css from '../styles/canvas.scss';
 import io from 'socket.io-client';
-import resizeCanvas from 'resize-canvas';
 
 class Canvas extends Component {
   constructor(props) {
