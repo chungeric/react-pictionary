@@ -17,7 +17,8 @@ app.use(webpackDevMiddleware(webpack(webpackConfig)));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 io.on('connection', (socket) => {
-  const mySessionId = socket.client.id.slice(0,8);
+  const mySessionId = socket.client.id;
+
   socket.broadcast.emit('connected', { sessionId: mySessionId });
 
   socket.on('draw', ({ x, y, e }) => {
@@ -25,6 +26,9 @@ io.on('connection', (socket) => {
   });
   socket.on('message-sent', ({message, sessionId}) => {
     socket.broadcast.emit('message-sent', {message, sessionId});
+  });
+  socket.on('share-numplayers', ({ numPlayers }) => {
+    socket.broadcast.emit('update-numplayers', { numPlayers });
   });
   socket.on('disconnect', () => {
     socket.broadcast.emit('disconnected', { sessionId: mySessionId });

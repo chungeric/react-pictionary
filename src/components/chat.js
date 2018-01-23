@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import css from '../../styles/chat.scss';
 import { connect } from 'react-redux';
-// import io from 'socket.io-client';
+import { bindActionCreators } from 'redux';
+import { addPlayer, removePlayer, updatePlayers } from '../actions';
 
 class Chat extends Component {
 
@@ -11,20 +12,6 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    // this.socket = io();
-    // this.socket.on('connect', () => {
-    //   this.setState({ sessionId: this.socket.id.slice(0,8) });
-    // });
-    // this.socket.on('connected', ({ sessionId }) => {
-    //   $(".message:last-of-type").after(
-    //     `<div class='message'><p>${sessionId} connected.</p></div>`
-    //   );
-    // });
-    // this.socket.on('message-sent', ({ message, sessionId }) => {
-    //   $(".message:last-of-type").after(
-    //     `<div class='message'><p>${sessionId}: ${message}</p></div>`
-    //   );
-    // });
     this.props.socket.on('connect', () => {
       const sessionId = this.props.socket.id.slice(0,8);
       this.setState({ sessionId });
@@ -35,23 +22,39 @@ class Chat extends Component {
         </p>`
       );
 
+      // add to player count in application state
+      this.props.addPlayer();
+      console.log(this.props.numPlayers);
     });
+
     this.props.socket.on('connected', ({ sessionId }) => {
       $(".message:last-of-type").after(
-        `<div class='message'><p>${sessionId} connected.</p></div>`
+        `<div class='message'><p>${sessionId.slice(0,8)} connected.</p></div>`
       );
+      this.props.addPlayer();
+      console.log(this.props.numPlayers);
+      this.props.socket.emit('share-numplayers', ({ numPlayers: this.props.numPlayers }));
     });
+
+    this.props.socket.on('update-numplayers', ({ numPlayers }) => {
+      this.props.updatePlayers(numPlayers);
+      console.log(this.props.numPlayers);
+    });
+
     this.props.socket.on('message-sent', ({ message, sessionId }) => {
       $(".message:last-of-type").after(
         `<div class='message'>
-          <p><strong><span style="color: red;">&lt;${sessionId}&gt;</span></strong>: ${message}</p>
+          <p><strong><span style="color: red;">&lt;${sessionId.slice(0,8)}&gt;</span></strong>: ${message}</p>
         </div>`
       );
     });
+
     this.props.socket.on('disconnected', ({ sessionId }) => {
       $(".message:last-of-type").after(
-        `<div class='message'><p>${sessionId} disconnected.</p></div>`
+        `<div class='message'><p>${sessionId.slice(0,8)} disconnected.</p></div>`
       );
+      this.props.removePlayer();
+      console.log(this.props.numPlayers);
     });
   }
 
@@ -61,7 +64,7 @@ class Chat extends Component {
       if (message !== '') {
         $(".message:last-of-type").after(
           `<div class='message'>
-            <p><strong><span style="color: red;">&lt;${this.state.sessionId}&gt;</span></strong>: ${message}</p>
+            <p><strong><span style="color: red;">&lt;${this.state.sessionId.slice(0,8)}&gt;</span></strong>: ${message}</p>
           </div>`
         );
         event.target.value = '';
@@ -91,7 +94,14 @@ class Chat extends Component {
 
 
 function mapStateToProps(state) {
-  return { socket: state.socket };
+  return {
+    socket: state.socket,
+    numPlayers: state.numPlayers
+  };
 }
 
-export default connect(mapStateToProps)(Chat);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ addPlayer, removePlayer, updatePlayers }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);

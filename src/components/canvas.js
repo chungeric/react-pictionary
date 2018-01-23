@@ -16,7 +16,6 @@ class Canvas extends Component {
   }
 
   componentDidMount() {
-    // this.socket = io();
     this.props.socket.on('draw', ({ x, y, e }) => {
       this.draw(x, y, e);
     });
