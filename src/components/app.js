@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Chat from './chat';
 import Canvas from './canvas';
-import css from '../styles/app.scss';
+import css from '../../styles/app.scss';
 
 class App extends Component {
 

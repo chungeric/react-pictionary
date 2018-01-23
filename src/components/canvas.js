@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import css from '../styles/canvas.scss';
-import io from 'socket.io-client';
+import css from '../../styles/canvas.scss';
+// import io from 'socket.io-client';
+import { connect } from 'react-redux';
 
 class Canvas extends Component {
   constructor(props) {
@@ -15,8 +16,8 @@ class Canvas extends Component {
   }
 
   componentDidMount() {
-    this.socket = io();
-    this.socket.on('draw', ({ x, y, e }) => {
+    // this.socket = io();
+    this.props.socket.on('draw', ({ x, y, e }) => {
       this.draw(x, y, e);
     });
 
@@ -70,12 +71,14 @@ class Canvas extends Component {
       pressed = true;
       this.setState({ x, y, pressed });
       this.draw(x, y, e);
-      this.socket.emit('draw', { x, y, e });
+      // this.socket.emit('draw', { x, y, e });
+      this.props.socket.emit('draw', { x, y, e });
     }
 
     if (e == "mouseout" || e == "mouseup") {
       this.draw(x, y, e);
-      this.socket.emit('draw', { x, y, e });
+      // this.socket.emit('draw', { x, y, e });
+      this.props.socket.emit('draw', { x, y, e });
       this.setState({pressed: false});
     }
 
@@ -84,7 +87,8 @@ class Canvas extends Component {
       y = mouse.offsetY;
       this.setState({ x, y });
       this.draw(x, y, e);
-      this.socket.emit('draw', { x, y, e });
+      // this.socket.emit('draw', { x, y, e });
+      this.props.socket.emit('draw', { x, y, e });
     }
   }
 
@@ -97,4 +101,9 @@ class Canvas extends Component {
   }
 }
 
-export default Canvas;
+
+function mapStateToProps(state) {
+  return { socket: state.socket };
+}
+
+export default connect(mapStateToProps)(Canvas);
