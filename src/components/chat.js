@@ -25,6 +25,13 @@ class Chat extends Component {
       // add to player count in application state
       this.props.addPlayer();
       console.log(this.props.numPlayers);
+
+      $(".message:first-of-type").append(
+        `<p class="online">
+          <strong><span style="color: #666;">${this.props.numPlayers}</span></strong> players currently online.
+        </p>`
+      );
+
     });
 
     this.props.socket.on('connected', ({ sessionId }) => {
@@ -34,11 +41,15 @@ class Chat extends Component {
       this.props.addPlayer();
       console.log(this.props.numPlayers);
       this.props.socket.emit('share-numplayers', ({ numPlayers: this.props.numPlayers }));
+
+      this.updateNumOnline();
     });
 
     this.props.socket.on('update-numplayers', ({ numPlayers }) => {
       this.props.updatePlayers(numPlayers);
       console.log(this.props.numPlayers);
+
+      this.updateNumOnline();
     });
 
     this.props.socket.on('message-sent', ({ message, sessionId }) => {
@@ -55,6 +66,8 @@ class Chat extends Component {
       );
       this.props.removePlayer();
       console.log(this.props.numPlayers);
+
+      this.updateNumOnline();
     });
   }
 
@@ -74,6 +87,14 @@ class Chat extends Component {
         this.props.socket.emit('message-sent', { message, sessionId: this.state.sessionId });
       }
     }
+  }
+
+  updateNumOnline() {
+    $(".message:first-of-type > .online").replaceWith(
+      `<p class="online">
+        <strong><span style="color: #666;">${this.props.numPlayers}</span></strong> players currently online.
+      </p>`
+    );
   }
 
   render() {
