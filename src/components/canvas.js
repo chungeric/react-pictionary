@@ -79,21 +79,19 @@ class Canvas extends Component {
   }
 
   draw(x, y, e) {
-    if(false) {
-      const { ctx } = this.state;
-      if (e == "mousedown") {
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-      }
-      else if (e == "mousemove") {
-        ctx.lineTo(x, y);
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-      else if (e == "mouseout" || e == "mouseup" ) {
-        ctx.closePath();
-      }
+    const { ctx } = this.state;
+    if (e == "mousedown") {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+    }
+    else if (e == "mousemove") {
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+    else if (e == "mouseout" || e == "mouseup" ) {
+      ctx.closePath();
     }
   }
 
