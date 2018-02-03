@@ -1,13 +1,33 @@
 .canvas {
-  height: 500px;
-  // max-width: 900px;
-  width: 900px;
-  overflow: hidden;
-  position: relative;
-  margin: 0 auto;
+  .canvas-wrapper {
+    height: 500px;
+    // max-width: 900px;
+    // height: auto;
+    width: 900px;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+    box-shadow: 0 5px 30px #444;
 
-  canvas {
-    background: white;
-    border: 2px solid #aeaeae;
+    canvas {
+      background: white;
+      border: 2px solid #aeaeae;
+    }
+  }
+
+  .palette {
+    margin-top: 20px;
+    .clear-btn {
+      background-color: transparent;
+      border: none;
+      color: white;
+      letter-spacing: 1px;
+      &:focus {
+        outline: none;
+      }
+      &:hover {
+        color: #eee;
+      }
+    }
   }
 }

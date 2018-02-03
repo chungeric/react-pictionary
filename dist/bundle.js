@@ -25373,6 +25373,8 @@ var Canvas = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Canvas.__proto__ || Object.getPrototypeOf(Canvas)).call(this, props));
 
     _this.findNewCoords = _this.findNewCoords.bind(_this);
+    _this.onClearBtnClick = _this.onClearBtnClick.bind(_this);
+    _this.clearCanvas = _this.clearCanvas.bind(_this);
     _this.state = {
       ctx: null,
       x: 0,
@@ -25400,6 +25402,10 @@ var Canvas = function (_Component) {
       var canvas = document.getElementById("canvas");
       var ctx = this.setupCanvas(canvas);
       this.setState({ ctx: ctx });
+
+      this.props.socket.on('clear-canvas', function () {
+        _this2.clearCanvas();
+      });
 
       // this.props.socket.on('connect', () => {
       //   if (this.props.numPlayers > 2) {
@@ -25510,13 +25516,40 @@ var Canvas = function (_Component) {
       }
     }
   }, {
+    key: 'onClearBtnClick',
+    value: function onClearBtnClick() {
+      this.clearCanvas();
+      this.props.socket.emit('clear-canvas');
+    }
+  }, {
+    key: 'clearCanvas',
+    value: function clearCanvas() {
+      console.log('clear');
+      var ctx = this.state.ctx;
+
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
         { className: 'canvas' },
-        _react2.default.createElement(_chat2.default, null),
-        _react2.default.createElement('canvas', { id: 'canvas', width: '896', height: '496' })
+        _react2.default.createElement(
+          'div',
+          { className: 'canvas-wrapper' },
+          _react2.default.createElement(_chat2.default, null),
+          _react2.default.createElement('canvas', { id: 'canvas', width: '896', height: '496' })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'palette' },
+          _react2.default.createElement(
+            'button',
+            { className: 'clear-btn', onClick: this.onClearBtnClick },
+            'Clear'
+          )
+        )
       );
     }
   }]);
@@ -25573,7 +25606,7 @@ exports = module.exports = __webpack_require__(21)(false);
 
 
 // module
-exports.push([module.i, ".canvas {\n  height: 500px;\n  width: 900px;\n  overflow: hidden;\n  position: relative;\n  margin: 0 auto; }\n  .canvas canvas {\n    background: white;\n    border: 2px solid #aeaeae; }\n", ""]);
+exports.push([module.i, ".canvas .canvas-wrapper {\n  height: 500px;\n  width: 900px;\n  overflow: hidden;\n  position: relative;\n  margin: 0 auto;\n  box-shadow: 0 5px 30px #444; }\n  .canvas .canvas-wrapper canvas {\n    background: white;\n    border: 2px solid #aeaeae; }\n\n.canvas .palette {\n  margin-top: 20px; }\n  .canvas .palette .clear-btn {\n    background-color: transparent;\n    border: none;\n    color: white;\n    letter-spacing: 1px; }\n    .canvas .palette .clear-btn:focus {\n      outline: none; }\n    .canvas .palette .clear-btn:hover {\n      color: #eee; }\n", ""]);
 
 // exports
 
@@ -25995,7 +26028,7 @@ exports = module.exports = __webpack_require__(21)(false);
 
 
 // module
-exports.push([module.i, ".app {\n  width: 100vw;\n  height: 100vh;\n  background: #355C7D;\n  /* fallback for old browsers */\n  background: -webkit-linear-gradient(340deg, #C06C84, #6C5B7B, #355C7D);\n  /* Chrome 10-25, Safari 5.1-6 */\n  background: linear-gradient(340deg, #C06C84, #6C5B7B, #355C7D);\n  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }\n  .app .wrapper {\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n    box-shadow: 0 5px 30px #444; }\n", ""]);
+exports.push([module.i, ".app {\n  width: 100vw;\n  height: 100vh;\n  background: #355C7D;\n  /* fallback for old browsers */\n  background: -webkit-linear-gradient(340deg, #C06C84, #6C5B7B, #355C7D);\n  /* Chrome 10-25, Safari 5.1-6 */\n  background: linear-gradient(340deg, #C06C84, #6C5B7B, #355C7D);\n  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }\n  .app .wrapper {\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%); }\n", ""]);
 
 // exports
 

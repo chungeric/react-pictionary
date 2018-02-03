@@ -43,6 +43,9 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     socket.broadcast.emit('disconnected', { sessionId: mySessionId });
   });
+  socket.on('clear-canvas', () => {
+    socket.broadcast.emit('clear-canvas');
+  });
 
   // socket.on('timer', ({ timer }) => {
   //   socket.broadcast.emit('timer', { timer });

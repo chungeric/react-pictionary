@@ -8,6 +8,8 @@ class Canvas extends Component {
   constructor(props) {
     super(props);
     this.findNewCoords = this.findNewCoords.bind(this);
+    this.onClearBtnClick = this.onClearBtnClick.bind(this);
+    this.clearCanvas = this.clearCanvas.bind(this);
     this.state = {
       ctx: null,
       x: 0,
@@ -26,6 +28,10 @@ class Canvas extends Component {
     let canvas = document.getElementById("canvas");
     const ctx = this.setupCanvas(canvas);
     this.setState({ ctx });
+
+    this.props.socket.on('clear-canvas', () => {
+      this.clearCanvas();
+    });
 
     // this.props.socket.on('connect', () => {
     //   if (this.props.numPlayers > 2) {
@@ -126,11 +132,27 @@ class Canvas extends Component {
     }
   }
 
+  onClearBtnClick() {
+    this.clearCanvas();
+    this.props.socket.emit('clear-canvas');
+  }
+
+  clearCanvas() {
+    console.log('clear');
+    let { ctx } = this.state;
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+
   render() {
     return (
       <div className="canvas">
-        <Chat />
-        <canvas id="canvas" width="896" height="496"></canvas>
+        <div className="canvas-wrapper">
+          <Chat />
+          <canvas id="canvas" width="896" height="496"></canvas>
+        </div>
+        <div className="palette">
+          <button className="clear-btn" onClick={this.onClearBtnClick}>Clear</button>
+        </div>
       </div>
     );
   }
