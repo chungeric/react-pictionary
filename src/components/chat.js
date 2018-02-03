@@ -8,12 +8,15 @@ class Chat extends Component {
   constructor(props) {
     super(props);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
+    this.onInputFocus = this.onInputFocus.bind(this);
+    this.onInputFocusOut = this.onInputFocusOut.bind(this);
     this.state = {
       sessionId: null
     };
   }
 
   componentDidMount() {
+
 
     // SELF CONNECTED
     this.props.socket.on('connect', () => {
@@ -75,6 +78,14 @@ class Chat extends Component {
     });
   }
 
+  onInputFocus(event) {
+    document.getElementsByClassName('chat')[0].style.height = "500px";;
+  }
+  onInputFocusOut(event) {
+    console.log('out');
+    document.getElementsByClassName('chat')[0].style.height = "40px";;
+  }
+
   onMessageSubmit(event) {
     if (event.key == 'Enter') {
       let message = event.target.value;
@@ -127,7 +138,14 @@ class Chat extends Component {
             </div>
           </div>
         </div>
-        <input id="chat-input" type="text" placeholder="Type your guess here..." onKeyPress={this.onMessageSubmit} />
+        <input
+          id="chat-input"
+          type="text"
+          placeholder="Type your guess here..."
+          onKeyPress={this.onMessageSubmit}
+          onFocus={this.onInputFocus}
+          onBlur={this.onInputFocusOut}
+        />
       </div>
     );
   }
