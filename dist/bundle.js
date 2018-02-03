@@ -25313,7 +25313,11 @@ var App = function (_Component) {
       return _react2.default.createElement(
         'div',
         { className: 'app' },
-        _react2.default.createElement(_canvas2.default, null)
+        _react2.default.createElement(
+          'div',
+          { className: 'wrapper' },
+          _react2.default.createElement(_canvas2.default, null)
+        )
       );
     }
   }]);
@@ -25728,7 +25732,7 @@ var Chat = function (_Component) {
 
       // SELF CONNECTED
       this.props.socket.on('connect', function () {
-        var sessionId = _this2.props.socket.id.slice(0, 8);
+        var sessionId = _this2.props.socket.id.slice(0, 4);
         _this2.setState({ sessionId: sessionId });
 
         // add to my player count in application state
@@ -25739,7 +25743,7 @@ var Chat = function (_Component) {
       this.props.socket.on('connected', function (_ref) {
         var sessionId = _ref.sessionId;
 
-        _this2.getLastMsgNode().insertAdjacentHTML('afterend', '<div class=\'message\'><p>' + sessionId.slice(0, 8) + ' connected.</p></div>');
+        _this2.getLastMsgNode().insertAdjacentHTML('afterend', '<div class=\'message\'><p>' + sessionId.slice(0, 4) + ' connected.</p></div>');
 
         // add to my player count in application state
         _this2.props.addPlayer();
@@ -25766,14 +25770,14 @@ var Chat = function (_Component) {
         var message = _ref3.message,
             sessionId = _ref3.sessionId;
 
-        _this2.getLastMsgNode().insertAdjacentHTML('afterend', '<div class=\'message\'>\n          <p><strong><span style="color: red;">&lt;' + sessionId.slice(0, 8) + '&gt;</span></strong>: ' + message + '</p>\n        </div>');
+        _this2.getLastMsgNode().insertAdjacentHTML('afterend', '<div class=\'message\'>\n          <p><strong><span style="color: red;">&lt;' + sessionId.slice(0, 4) + '&gt;</span></strong>: ' + message + '</p>\n        </div>');
       });
 
       // PLAYER DISCONNECTED
       this.props.socket.on('disconnected', function (_ref4) {
         var sessionId = _ref4.sessionId;
 
-        _this2.getLastMsgNode().insertAdjacentHTML('afterend', '<div class=\'message\'><p>' + sessionId.slice(0, 8) + ' disconnected.</p></div>');
+        _this2.getLastMsgNode().insertAdjacentHTML('afterend', '<div class=\'message\'><p>' + sessionId.slice(0, 4) + ' disconnected.</p></div>');
 
         // deducts from player count in application state
         _this2.props.removePlayer();
@@ -25794,12 +25798,19 @@ var Chat = function (_Component) {
       document.getElementsByClassName('chat')[0].style.height = "40px";;
     }
   }, {
+    key: 'updateScroll',
+    value: function updateScroll() {
+      var element = document.getElementsByClassName('messages-wrapper')[0];
+      element.scrollTop = element.scrollHeight;
+    }
+  }, {
     key: 'onMessageSubmit',
     value: function onMessageSubmit(event) {
       if (event.key == 'Enter') {
         var message = event.target.value;
         if (message !== '') {
           this.getLastMsgNode().insertAdjacentHTML('afterend', '<div class=\'message\'>\n            <p><strong><span style="color: red;">&lt;' + this.state.sessionId + '&gt;</span></strong>: ' + message + '</p>\n          </div>');
+          this.updateScroll();
           event.target.value = '';
 
           // trigger message-sent event
@@ -25939,7 +25950,7 @@ exports = module.exports = __webpack_require__(21)(false);
 
 
 // module
-exports.push([module.i, ".chat {\n  color: black;\n  border: 2px solid #aeaeae;\n  width: 30%;\n  height: 40px;\n  min-width: 200px;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  background-color: rgba(238, 238, 238, 0.8);\n  transition: height 0.4s ease; }\n  .chat .messages-wrapper {\n    width: 100%;\n    height: calc(100% - 40px);\n    overflow-y: scroll;\n    position: relative; }\n    .chat .messages-wrapper .messages {\n      position: absolute;\n      bottom: 0;\n      max-height: 100%;\n      width: 100%;\n      display: flex;\n      flex-direction: column; }\n      .chat .messages-wrapper .messages .message {\n        flex: 1 1 100%;\n        padding: 0 5px; }\n  .chat input {\n    width: 100%;\n    position: absolute;\n    bottom: 0%;\n    height: 40px;\n    padding: 5px; }\n", ""]);
+exports.push([module.i, ".chat {\n  color: black;\n  border: 2px solid #aeaeae;\n  width: 30%;\n  height: 40px;\n  min-width: 200px;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  background-color: rgba(238, 238, 238, 0.8);\n  transition: height 0.4s ease; }\n  .chat .messages-wrapper {\n    width: 100%;\n    height: calc(100% - 40px);\n    overflow-y: scroll;\n    position: relative; }\n    .chat .messages-wrapper .messages {\n      position: absolute;\n      bottom: 0;\n      max-height: 100%;\n      width: 100%;\n      display: flex;\n      flex-direction: column; }\n      .chat .messages-wrapper .messages .message {\n        flex: 1 1 100%;\n        padding: 0 5px;\n        overflow-wrap: break-word; }\n  .chat input {\n    width: 100%;\n    position: absolute;\n    bottom: 0%;\n    height: 40px;\n    padding: 5px; }\n    .chat input:focus {\n      outline: 0; }\n", ""]);
 
 // exports
 
@@ -25984,7 +25995,7 @@ exports = module.exports = __webpack_require__(21)(false);
 
 
 // module
-exports.push([module.i, ".app {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%); }\n", ""]);
+exports.push([module.i, ".app {\n  width: 100vw;\n  height: 100vh;\n  background: #355C7D;\n  /* fallback for old browsers */\n  background: -webkit-linear-gradient(340deg, #C06C84, #6C5B7B, #355C7D);\n  /* Chrome 10-25, Safari 5.1-6 */\n  background: linear-gradient(340deg, #C06C84, #6C5B7B, #355C7D);\n  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }\n  .app .wrapper {\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n    box-shadow: 0 5px 30px #444; }\n", ""]);
 
 // exports
 

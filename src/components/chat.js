@@ -20,7 +20,7 @@ class Chat extends Component {
 
     // SELF CONNECTED
     this.props.socket.on('connect', () => {
-      const sessionId = this.props.socket.id.slice(0,8);
+      const sessionId = this.props.socket.id.slice(0,4);
       this.setState({ sessionId });
 
       // add to my player count in application state
@@ -31,7 +31,7 @@ class Chat extends Component {
     // NEW USER (NOT SELF) CONNECTED
     this.props.socket.on('connected', ({ sessionId }) => {
       this.getLastMsgNode().insertAdjacentHTML('afterend',
-        `<div class='message'><p>${ sessionId.slice(0,8) } connected.</p></div>`
+        `<div class='message'><p>${ sessionId.slice(0,4) } connected.</p></div>`
       );
 
       // add to my player count in application state
@@ -58,7 +58,7 @@ class Chat extends Component {
     this.props.socket.on('message-sent', ({ message, sessionId }) => {
       this.getLastMsgNode().insertAdjacentHTML('afterend',
         `<div class='message'>
-          <p><strong><span style="color: red;">&lt;${ sessionId.slice(0,8) }&gt;</span></strong>: ${ message }</p>
+          <p><strong><span style="color: red;">&lt;${ sessionId.slice(0,4) }&gt;</span></strong>: ${ message }</p>
         </div>`
       );
     });
@@ -67,7 +67,7 @@ class Chat extends Component {
     // PLAYER DISCONNECTED
     this.props.socket.on('disconnected', ({ sessionId }) => {
       this.getLastMsgNode().insertAdjacentHTML('afterend',
-        `<div class='message'><p>${ sessionId.slice(0,8) } disconnected.</p></div>`
+        `<div class='message'><p>${ sessionId.slice(0,4) } disconnected.</p></div>`
       );
 
       // deducts from player count in application state
@@ -86,6 +86,11 @@ class Chat extends Component {
     document.getElementsByClassName('chat')[0].style.height = "40px";;
   }
 
+  updateScroll() {
+    var element = document.getElementsByClassName('messages-wrapper')[0];
+    element.scrollTop = element.scrollHeight;
+  }
+
   onMessageSubmit(event) {
     if (event.key == 'Enter') {
       let message = event.target.value;
@@ -95,6 +100,7 @@ class Chat extends Component {
             <p><strong><span style="color: red;">&lt;${ this.state.sessionId }&gt;</span></strong>: ${message}</p>
           </div>`
         );
+        this.updateScroll();
         event.target.value = '';
 
         // trigger message-sent event

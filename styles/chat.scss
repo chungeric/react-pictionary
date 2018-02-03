@@ -28,6 +28,11 @@
       .message {
         flex: 1 1 100%;
         padding: 0 5px;
+        overflow-wrap: break-word;
+
+        .welcome {
+          // margin-top: 20px;
+        }
       }
     }
   }
@@ -37,5 +42,8 @@
     bottom: 0%;
     height: 40px;
     padding: 5px;
+    &:focus {
+      outline: 0;
+    }
   }
 }
