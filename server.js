@@ -15,15 +15,16 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, '/dist')));
 app.use(webpackDevMiddleware(webpack(webpackConfig)));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.configure('production', => {
-  app.use((req, res, next) => {
-    if (req.header 'x-forwarded-proto' !== 'https') {
-      res.redirect(`https://${req.header('host')}${req.url}`);
-    } else {
-      next();
-    }
-  });
-});
+/* SSL redirect did not work (copy pasta) */
+// app.configure('production', => {
+//   app.use((req, res, next) => {
+//     if (req.header 'x-forwarded-proto' !== 'https') {
+//       res.redirect(`https://${req.header('host')}${req.url}`);
+//     } else {
+//       next();
+//     }
+//   });
+// });
 
 io.on('connection', (socket) => {
   const mySessionId = socket.client.id;
