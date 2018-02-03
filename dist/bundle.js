@@ -25280,11 +25280,7 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _chat = __webpack_require__(94);
-
-var _chat2 = _interopRequireDefault(_chat);
-
-var _canvas = __webpack_require__(98);
+var _canvas = __webpack_require__(94);
 
 var _canvas2 = _interopRequireDefault(_canvas);
 
@@ -25299,6 +25295,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+// import Chat from './chat';
+
 
 var App = function (_Component) {
   _inherits(App, _Component);
@@ -25315,8 +25313,7 @@ var App = function (_Component) {
       return _react2.default.createElement(
         'div',
         { className: 'app' },
-        _react2.default.createElement(_canvas2.default, null),
-        _react2.default.createElement(_chat2.default, null)
+        _react2.default.createElement(_canvas2.default, null)
       );
     }
   }]);
@@ -25343,7 +25340,353 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _chat = __webpack_require__(95);
+var _canvas = __webpack_require__(95);
+
+var _canvas2 = _interopRequireDefault(_canvas);
+
+var _chat = __webpack_require__(98);
+
+var _chat2 = _interopRequireDefault(_chat);
+
+var _reactRedux = __webpack_require__(17);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+// import io from 'socket.io-client';
+
+
+var Canvas = function (_Component) {
+  _inherits(Canvas, _Component);
+
+  function Canvas(props) {
+    _classCallCheck(this, Canvas);
+
+    var _this = _possibleConstructorReturn(this, (Canvas.__proto__ || Object.getPrototypeOf(Canvas)).call(this, props));
+
+    _this.findNewCoords = _this.findNewCoords.bind(_this);
+    _this.state = {
+      ctx: null,
+      x: 0,
+      y: 0,
+      pressed: false,
+      timerFlag: false,
+      timer: 10
+    };
+    return _this;
+  }
+
+  _createClass(Canvas, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      this.props.socket.on('draw', function (_ref) {
+        var x = _ref.x,
+            y = _ref.y,
+            e = _ref.e;
+
+        _this2.draw(x, y, e);
+      });
+
+      var canvas = document.getElementById("canvas");
+      var ctx = this.setupCanvas(canvas);
+      this.setState({ ctx: ctx });
+
+      // this.props.socket.on('connect', () => {
+      //   if (this.props.numPlayers > 2) {
+      //     this.setState({ timerFlag: true });
+      //   }
+      // });
+      //
+      // this.props.socket.on('timer', ({ timer }) => {
+      //   this.setState({ timer });
+      //   console.log(this.state.timer);
+      // });
+      //
+      // this.props.socket.on('connected', () => {
+      //   // if we are the only one connected when someone else connects
+      //   // start timer
+      //   if (this.props.numPlayers == 1 && !this.state.timerFlag) {
+      //     this.setState({ timerFlag: true });
+      //     this.props.socket.emit('flag');
+      //
+      //     this.gameTimer = setInterval( () => {
+      //       let { timer } = this.state;
+      //       if (timer == 0) {
+      //         timer = 10;
+      //       }
+      //       timer--;
+      //       this.props.socket.emit('timer', { timer });
+      //       this.setState({ timer });
+      //       console.log(this.state.timer);
+      //
+      //     }, 1000);
+      //   }
+      // });
+      //
+      // this.props.socket.on('flag', () => {
+      //   this.setState({ timerFlag: true });
+      // });
+    }
+  }, {
+    key: 'setupCanvas',
+    value: function setupCanvas(canvas) {
+      this.addCanvasEventListener("mousedown", canvas);
+      this.addCanvasEventListener("mouseup", canvas);
+      this.addCanvasEventListener("mousemove", canvas);
+      this.addCanvasEventListener("mouseout", canvas);
+
+      return canvas.getContext("2d");
+    }
+  }, {
+    key: 'addCanvasEventListener',
+    value: function addCanvasEventListener(event, canvas) {
+      var _this3 = this;
+
+      canvas.addEventListener(event, function (e) {
+        _this3.findNewCoords(event, e);
+      });
+    }
+  }, {
+    key: 'draw',
+    value: function draw(x, y, e) {
+      var ctx = this.state.ctx;
+
+      if (e == "mousedown") {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      } else if (e == "mousemove") {
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      } else if (e == "mouseout" || e == "mouseup") {
+        ctx.closePath();
+      }
+    }
+  }, {
+    key: 'findNewCoords',
+    value: function findNewCoords(e, mouse) {
+      var _state = this.state,
+          ctx = _state.ctx,
+          pressed = _state.pressed,
+          x = _state.x,
+          y = _state.y;
+
+
+      if (e == "mousedown") {
+        x = mouse.offsetX;
+        y = mouse.offsetY;
+        pressed = true;
+        this.setState({ x: x, y: y, pressed: pressed });
+        this.draw(x, y, e);
+        // this.socket.emit('draw', { x, y, e });
+        this.props.socket.emit('draw', { x: x, y: y, e: e });
+      }
+
+      if (e == "mouseout" || e == "mouseup") {
+        this.draw(x, y, e);
+        // this.socket.emit('draw', { x, y, e });
+        this.props.socket.emit('draw', { x: x, y: y, e: e });
+        this.setState({ pressed: false });
+      }
+
+      if (e == "mousemove" && pressed) {
+        x = mouse.offsetX;
+        y = mouse.offsetY;
+        this.setState({ x: x, y: y });
+        this.draw(x, y, e);
+        // this.socket.emit('draw', { x, y, e });
+        this.props.socket.emit('draw', { x: x, y: y, e: e });
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'canvas' },
+        _react2.default.createElement(_chat2.default, null),
+        _react2.default.createElement('canvas', { id: 'canvas', width: '896', height: '496' })
+      );
+    }
+  }]);
+
+  return Canvas;
+}(_react.Component);
+
+function mapStateToProps(state) {
+  return {
+    socket: state.socket,
+    numPlayers: state.numPlayers
+  };
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(Canvas);
+
+/***/ }),
+/* 95 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(96);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {"hmr":true}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(22)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../node_modules/css-loader/index.js!../node_modules/sass-loader/lib/loader.js!./canvas.scss", function() {
+			var newContent = require("!!../node_modules/css-loader/index.js!../node_modules/sass-loader/lib/loader.js!./canvas.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 96 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(21)(false);
+// imports
+
+
+// module
+exports.push([module.i, ".canvas {\n  height: 500px;\n  width: 900px;\n  overflow: hidden;\n  position: relative;\n  margin: 0 auto; }\n  .canvas canvas {\n    background: white;\n    border: 2px solid #aeaeae; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ }),
+/* 98 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _chat = __webpack_require__(99);
 
 var _chat2 = _interopRequireDefault(_chat);
 
@@ -25537,13 +25880,13 @@ function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Chat);
 
 /***/ }),
-/* 95 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(96);
+var content = __webpack_require__(100);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -25568,347 +25911,6 @@ if(false) {
 }
 
 /***/ }),
-/* 96 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(21)(false);
-// imports
-
-
-// module
-exports.push([module.i, ".chat {\n  color: black;\n  border: 2px solid #aeaeae;\n  width: 30%;\n  height: 500px;\n  min-width: 200px;\n  position: relative;\n  display: inline-block;\n  background: #eee; }\n  .chat .messages-wrapper {\n    width: 100%;\n    height: calc(100% - 40px);\n    overflow-y: scroll;\n    position: relative; }\n    .chat .messages-wrapper .messages {\n      position: absolute;\n      bottom: 0;\n      max-height: 100%;\n      width: 100%;\n      display: flex;\n      flex-direction: column; }\n      .chat .messages-wrapper .messages .message {\n        flex: 1 1 100%;\n        padding: 0 5px; }\n  .chat input {\n    width: 100%;\n    position: absolute;\n    bottom: 0%;\n    height: 40px;\n    padding: 5px; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 97 */
-/***/ (function(module, exports) {
-
-
-/**
- * When source maps are enabled, `style-loader` uses a link element with a data-uri to
- * embed the css on the page. This breaks all relative urls because now they are relative to a
- * bundle instead of the current page.
- *
- * One solution is to only use full urls, but that may be impossible.
- *
- * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
- *
- * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
- *
- */
-
-module.exports = function (css) {
-  // get current location
-  var location = typeof window !== "undefined" && window.location;
-
-  if (!location) {
-    throw new Error("fixUrls requires window.location");
-  }
-
-	// blank or null?
-	if (!css || typeof css !== "string") {
-	  return css;
-  }
-
-  var baseUrl = location.protocol + "//" + location.host;
-  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
-
-	// convert each url(...)
-	/*
-	This regular expression is just a way to recursively match brackets within
-	a string.
-
-	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
-	   (  = Start a capturing group
-	     (?:  = Start a non-capturing group
-	         [^)(]  = Match anything that isn't a parentheses
-	         |  = OR
-	         \(  = Match a start parentheses
-	             (?:  = Start another non-capturing groups
-	                 [^)(]+  = Match anything that isn't a parentheses
-	                 |  = OR
-	                 \(  = Match a start parentheses
-	                     [^)(]*  = Match anything that isn't a parentheses
-	                 \)  = Match a end parentheses
-	             )  = End Group
-              *\) = Match anything and then a close parens
-          )  = Close non-capturing group
-          *  = Match anything
-       )  = Close capturing group
-	 \)  = Match a close parens
-
-	 /gi  = Get all matches, not the first.  Be case insensitive.
-	 */
-	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
-		// strip quotes (if they exist)
-		var unquotedOrigUrl = origUrl
-			.trim()
-			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
-			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
-
-		// already a full url? no change
-		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
-		  return fullMatch;
-		}
-
-		// convert the url to a full url
-		var newUrl;
-
-		if (unquotedOrigUrl.indexOf("//") === 0) {
-		  	//TODO: should we add protocol?
-			newUrl = unquotedOrigUrl;
-		} else if (unquotedOrigUrl.indexOf("/") === 0) {
-			// path should be relative to the base url
-			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
-		} else {
-			// path should be relative to current directory
-			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
-		}
-
-		// send back the fixed url(...)
-		return "url(" + JSON.stringify(newUrl) + ")";
-	});
-
-	// send back the fixed css
-	return fixedCss;
-};
-
-
-/***/ }),
-/* 98 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(2);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _canvas = __webpack_require__(99);
-
-var _canvas2 = _interopRequireDefault(_canvas);
-
-var _reactRedux = __webpack_require__(17);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-// import io from 'socket.io-client';
-
-
-var Canvas = function (_Component) {
-  _inherits(Canvas, _Component);
-
-  function Canvas(props) {
-    _classCallCheck(this, Canvas);
-
-    var _this = _possibleConstructorReturn(this, (Canvas.__proto__ || Object.getPrototypeOf(Canvas)).call(this, props));
-
-    _this.findNewCoords = _this.findNewCoords.bind(_this);
-    _this.state = {
-      ctx: null,
-      x: 0,
-      y: 0,
-      pressed: false,
-      timerFlag: false,
-      timer: 10
-    };
-    return _this;
-  }
-
-  _createClass(Canvas, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      this.props.socket.on('draw', function (_ref) {
-        var x = _ref.x,
-            y = _ref.y,
-            e = _ref.e;
-
-        _this2.draw(x, y, e);
-      });
-
-      var canvas = document.getElementById("canvas");
-      var ctx = this.setupCanvas(canvas);
-      this.setState({ ctx: ctx });
-
-      // this.props.socket.on('connect', () => {
-      //   if (this.props.numPlayers > 2) {
-      //     this.setState({ timerFlag: true });
-      //   }
-      // });
-      //
-      // this.props.socket.on('timer', ({ timer }) => {
-      //   this.setState({ timer });
-      //   console.log(this.state.timer);
-      // });
-      //
-      // this.props.socket.on('connected', () => {
-      //   // if we are the only one connected when someone else connects
-      //   // start timer
-      //   if (this.props.numPlayers == 1 && !this.state.timerFlag) {
-      //     this.setState({ timerFlag: true });
-      //     this.props.socket.emit('flag');
-      //
-      //     this.gameTimer = setInterval( () => {
-      //       let { timer } = this.state;
-      //       if (timer == 0) {
-      //         timer = 10;
-      //       }
-      //       timer--;
-      //       this.props.socket.emit('timer', { timer });
-      //       this.setState({ timer });
-      //       console.log(this.state.timer);
-      //
-      //     }, 1000);
-      //   }
-      // });
-      //
-      // this.props.socket.on('flag', () => {
-      //   this.setState({ timerFlag: true });
-      // });
-    }
-  }, {
-    key: 'setupCanvas',
-    value: function setupCanvas(canvas) {
-      this.addCanvasEventListener("mousedown", canvas);
-      this.addCanvasEventListener("mouseup", canvas);
-      this.addCanvasEventListener("mousemove", canvas);
-      this.addCanvasEventListener("mouseout", canvas);
-
-      return canvas.getContext("2d");
-    }
-  }, {
-    key: 'addCanvasEventListener',
-    value: function addCanvasEventListener(event, canvas) {
-      var _this3 = this;
-
-      canvas.addEventListener(event, function (e) {
-        _this3.findNewCoords(event, e);
-      });
-    }
-  }, {
-    key: 'draw',
-    value: function draw(x, y, e) {
-      var ctx = this.state.ctx;
-
-      if (e == "mousedown") {
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-      } else if (e == "mousemove") {
-        ctx.lineTo(x, y);
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      } else if (e == "mouseout" || e == "mouseup") {
-        ctx.closePath();
-      }
-    }
-  }, {
-    key: 'findNewCoords',
-    value: function findNewCoords(e, mouse) {
-      var _state = this.state,
-          ctx = _state.ctx,
-          pressed = _state.pressed,
-          x = _state.x,
-          y = _state.y;
-
-
-      if (e == "mousedown") {
-        x = mouse.offsetX;
-        y = mouse.offsetY;
-        pressed = true;
-        this.setState({ x: x, y: y, pressed: pressed });
-        this.draw(x, y, e);
-        // this.socket.emit('draw', { x, y, e });
-        this.props.socket.emit('draw', { x: x, y: y, e: e });
-      }
-
-      if (e == "mouseout" || e == "mouseup") {
-        this.draw(x, y, e);
-        // this.socket.emit('draw', { x, y, e });
-        this.props.socket.emit('draw', { x: x, y: y, e: e });
-        this.setState({ pressed: false });
-      }
-
-      if (e == "mousemove" && pressed) {
-        x = mouse.offsetX;
-        y = mouse.offsetY;
-        this.setState({ x: x, y: y });
-        this.draw(x, y, e);
-        // this.socket.emit('draw', { x, y, e });
-        this.props.socket.emit('draw', { x: x, y: y, e: e });
-      }
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { className: 'canvas' },
-        _react2.default.createElement('canvas', { id: 'canvas', width: '700', height: '496' })
-      );
-    }
-  }]);
-
-  return Canvas;
-}(_react.Component);
-
-function mapStateToProps(state) {
-  return {
-    socket: state.socket,
-    numPlayers: state.numPlayers
-  };
-}
-
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(Canvas);
-
-/***/ }),
-/* 99 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(100);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {"hmr":true}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(22)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../node_modules/css-loader/index.js!../node_modules/sass-loader/lib/loader.js!./canvas.scss", function() {
-			var newContent = require("!!../node_modules/css-loader/index.js!../node_modules/sass-loader/lib/loader.js!./canvas.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
 /* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25917,7 +25919,7 @@ exports = module.exports = __webpack_require__(21)(false);
 
 
 // module
-exports.push([module.i, ".canvas {\n  width: 70%;\n  height: 500px;\n  min-width: 700px;\n  overflow: hidden; }\n  .canvas canvas {\n    background: white;\n    border: 2px solid #aeaeae;\n    box-sizing: border-box; }\n", ""]);
+exports.push([module.i, ".chat {\n  color: black;\n  border: 2px solid #aeaeae;\n  width: 30%;\n  height: 500px;\n  min-width: 200px;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  background: #eee; }\n  .chat .messages-wrapper {\n    width: 100%;\n    height: calc(100% - 40px);\n    overflow-y: scroll;\n    position: relative; }\n    .chat .messages-wrapper .messages {\n      position: absolute;\n      bottom: 0;\n      max-height: 100%;\n      width: 100%;\n      display: flex;\n      flex-direction: column; }\n      .chat .messages-wrapper .messages .message {\n        flex: 1 1 100%;\n        padding: 0 5px; }\n  .chat input {\n    width: 100%;\n    position: absolute;\n    bottom: 0%;\n    height: 40px;\n    padding: 5px; }\n", ""]);
 
 // exports
 
@@ -25962,7 +25964,7 @@ exports = module.exports = __webpack_require__(21)(false);
 
 
 // module
-exports.push([module.i, ".app {\n  display: flex;\n  align-content: center;\n  width: 80%;\n  margin: 0 auto;\n  padding-top: 20px; }\n", ""]);
+exports.push([module.i, ".app {\n  max-width: 900px;\n  margin: 0 auto;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%); }\n", ""]);
 
 // exports
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import css from '../../styles/canvas.scss';
+import Chat from './chat';
 // import io from 'socket.io-client';
 import { connect } from 'react-redux';
 
@@ -128,7 +129,8 @@ class Canvas extends Component {
   render() {
     return (
       <div className="canvas">
-        <canvas id="canvas" width="700" height="496"></canvas>
+        <Chat />
+        <canvas id="canvas" width="896" height="496"></canvas>
       </div>
     );
   }

@@ -1,12 +1,14 @@
 .canvas {
-  width: 70%;
   height: 500px;
-  min-width: 700px;
+  // max-width: 900px;
+  width: 900px;
   overflow: hidden;
+  position: relative;
+  margin: 0 auto;
 
   canvas {
     background: white;
     border: 2px solid #aeaeae;
-    box-sizing: border-box;
+    // box-sizing: border-box;
   }
 }

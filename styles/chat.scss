@@ -3,9 +3,11 @@
   border: 2px solid #aeaeae;
   width: 30%;
   height: 500px;
+  // height: 40px;
   min-width: 200px;
-  position: relative;
-  display: inline-block;
+  position: absolute;
+  right: 0;
+  bottom: 0;
   background: #eee;
 
   .messages-wrapper {
