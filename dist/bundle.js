@@ -25915,14 +25915,19 @@ var Chat = function (_Component) {
             )
           )
         ),
-        _react2.default.createElement('input', {
-          id: 'chat-input',
-          type: 'text',
-          placeholder: 'Type your guess here...',
-          onKeyPress: this.onMessageSubmit,
-          onFocus: this.onInputFocus,
-          onBlur: this.onInputFocusOut
-        })
+        _react2.default.createElement(
+          'div',
+          { className: 'input-wrapper' },
+          _react2.default.createElement('input', {
+            id: 'chat-input',
+            type: 'text',
+            placeholder: 'Type your guess here...',
+            onKeyPress: this.onMessageSubmit,
+            onFocus: this.onInputFocus,
+            onBlur: this.onInputFocusOut,
+            autoFocus: true
+          })
+        )
       );
     }
   }]);
@@ -25983,7 +25988,7 @@ exports = module.exports = __webpack_require__(21)(false);
 
 
 // module
-exports.push([module.i, ".chat {\n  color: black;\n  border: 2px solid #aeaeae;\n  width: 30%;\n  height: 40px;\n  min-width: 200px;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  background-color: rgba(238, 238, 238, 0.8);\n  transition: height 0.4s ease; }\n  .chat .messages-wrapper {\n    width: 100%;\n    height: calc(100% - 40px);\n    overflow-y: scroll;\n    position: relative; }\n    .chat .messages-wrapper .messages {\n      position: absolute;\n      bottom: 0;\n      max-height: 100%;\n      width: 100%;\n      display: flex;\n      flex-direction: column; }\n      .chat .messages-wrapper .messages .message {\n        flex: 1 1 100%;\n        padding: 0 5px;\n        overflow-wrap: break-word; }\n  .chat input {\n    width: 100%;\n    position: absolute;\n    bottom: 0%;\n    height: 40px;\n    padding: 5px; }\n    .chat input:focus {\n      outline: 0; }\n", ""]);
+exports.push([module.i, ".chat {\n  color: black;\n  border: 2px solid #aeaeae;\n  width: 30%;\n  height: 40px;\n  min-width: 200px;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  background-color: rgba(238, 238, 238, 0.8);\n  transition: height 0.4s ease; }\n  .chat .messages-wrapper {\n    width: 100%;\n    height: calc(100% - 40px);\n    overflow-y: scroll;\n    position: relative; }\n    .chat .messages-wrapper .messages {\n      position: absolute;\n      bottom: 0;\n      max-height: 100%;\n      width: 100%;\n      display: flex;\n      flex-direction: column; }\n      .chat .messages-wrapper .messages .message {\n        flex: 1 1 100%;\n        padding: 0 5px;\n        overflow-wrap: break-word; }\n  .chat .input-wrapper input {\n    width: 100%;\n    position: absolute;\n    bottom: 0;\n    height: 40px;\n    padding: 5px 45px 5px 5px; }\n    .chat .input-wrapper input:focus {\n      outline: 0; }\n", ""]);
 
 // exports
 

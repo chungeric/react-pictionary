@@ -144,14 +144,17 @@ class Chat extends Component {
             </div>
           </div>
         </div>
-        <input
-          id="chat-input"
-          type="text"
-          placeholder="Type your guess here..."
-          onKeyPress={this.onMessageSubmit}
-          onFocus={this.onInputFocus}
-          onBlur={this.onInputFocusOut}
-        />
+        <div className="input-wrapper">
+          <input
+            id="chat-input"
+            type="text"
+            placeholder="Type your guess here..."
+            onKeyPress={this.onMessageSubmit}
+            onFocus={this.onInputFocus}
+            onBlur={this.onInputFocusOut}
+            autoFocus
+          />
+        </div>
       </div>
     );
   }
