@@ -25752,8 +25752,10 @@ var Chat = function (_Component) {
     _this.onMessageSubmit = _this.onMessageSubmit.bind(_this);
     _this.onInputFocus = _this.onInputFocus.bind(_this);
     _this.onInputFocusOut = _this.onInputFocusOut.bind(_this);
+    _this.pinChat = _this.pinChat.bind(_this);
     _this.state = {
-      sessionId: null
+      sessionId: null,
+      chatPinned: false
     };
     return _this;
   }
@@ -25827,7 +25829,6 @@ var Chat = function (_Component) {
   }, {
     key: 'onInputFocusOut',
     value: function onInputFocusOut(event) {
-      console.log('out');
       document.getElementsByClassName('chat')[0].style.height = "40px";;
     }
   }, {
@@ -25850,6 +25851,15 @@ var Chat = function (_Component) {
           this.props.socket.emit('message-sent', { message: message, sessionId: this.state.sessionId });
         }
       }
+    }
+  }, {
+    key: 'pinChat',
+    value: function pinChat() {
+      var element = document.getElementsByClassName('chat')[0];
+      var chatPinned = this.state.chatPinned;
+
+      this.setState({ chatPinned: !chatPinned });
+      element.classList.toggle("open");
     }
   }, {
     key: 'getLastMsgNode',
@@ -25876,6 +25886,11 @@ var Chat = function (_Component) {
       return _react2.default.createElement(
         'div',
         { className: 'chat' },
+        _react2.default.createElement('input', {
+          type: 'button',
+          className: 'pin-chat',
+          onMouseDown: this.pinChat,
+          value: this.state.chatPinned ? 'Unpin' : 'Pin' }),
         _react2.default.createElement(
           'div',
           { className: 'messages-wrapper' },
@@ -25988,7 +26003,7 @@ exports = module.exports = __webpack_require__(21)(false);
 
 
 // module
-exports.push([module.i, ".chat {\n  color: black;\n  border: 2px solid #aeaeae;\n  width: 30%;\n  height: 40px;\n  min-width: 200px;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  background-color: rgba(238, 238, 238, 0.8);\n  transition: height 0.4s ease; }\n  .chat .messages-wrapper {\n    width: 100%;\n    height: calc(100% - 40px);\n    overflow-y: scroll;\n    position: relative; }\n    .chat .messages-wrapper .messages {\n      position: absolute;\n      bottom: 0;\n      max-height: 100%;\n      width: 100%;\n      display: flex;\n      flex-direction: column; }\n      .chat .messages-wrapper .messages .message {\n        flex: 1 1 100%;\n        padding: 0 5px;\n        overflow-wrap: break-word; }\n  .chat .input-wrapper input {\n    width: 100%;\n    position: absolute;\n    bottom: 0;\n    height: 40px;\n    padding: 5px 45px 5px 5px; }\n    .chat .input-wrapper input:focus {\n      outline: 0; }\n", ""]);
+exports.push([module.i, ".chat {\n  color: black;\n  border: 2px solid #aeaeae;\n  width: 30%;\n  height: 40px;\n  min-width: 200px;\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  background-color: rgba(238, 238, 238, 0.8);\n  transition: height 0.4s ease; }\n  .chat .pin-chat {\n    background-color: #C06C84;\n    color: white;\n    position: absolute;\n    top: 10px;\n    right: 25px;\n    z-index: 2;\n    border: none;\n    font-size: 0.8em;\n    box-shadow: inset 1px 1px 4px #854B5C;\n    letter-spacing: 1px; }\n    .chat .pin-chat:focus {\n      outline: 0; }\n  .chat.open {\n    height: 500px !important; }\n  .chat .messages-wrapper {\n    width: 100%;\n    height: calc(100% - 40px);\n    overflow-y: scroll;\n    position: relative; }\n    .chat .messages-wrapper .messages {\n      position: absolute;\n      bottom: 0;\n      max-height: 100%;\n      width: 100%;\n      display: flex;\n      flex-direction: column; }\n      .chat .messages-wrapper .messages .message {\n        flex: 1 1 100%;\n        padding: 0 5px;\n        overflow-wrap: break-word; }\n        .chat .messages-wrapper .messages .message .welcome {\n          margin-top: 35px; }\n  .chat .input-wrapper input {\n    width: 100%;\n    position: absolute;\n    bottom: 0;\n    height: 40px;\n    padding: 5px 45px 5px 5px;\n    z-index: 999; }\n    .chat .input-wrapper input:focus {\n      outline: 0; }\n", ""]);
 
 // exports
 

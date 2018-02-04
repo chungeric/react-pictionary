@@ -10,8 +10,10 @@ class Chat extends Component {
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
     this.onInputFocus = this.onInputFocus.bind(this);
     this.onInputFocusOut = this.onInputFocusOut.bind(this);
+    this.pinChat = this.pinChat.bind(this);
     this.state = {
-      sessionId: null
+      sessionId: null,
+      chatPinned: false
     };
   }
 
@@ -82,7 +84,6 @@ class Chat extends Component {
     document.getElementsByClassName('chat')[0].style.height = "500px";;
   }
   onInputFocusOut(event) {
-    console.log('out');
     document.getElementsByClassName('chat')[0].style.height = "40px";;
   }
 
@@ -109,6 +110,13 @@ class Chat extends Component {
     }
   }
 
+  pinChat() {
+    var element = document.getElementsByClassName('chat')[0];
+    var { chatPinned } = this.state;
+    this.setState({ chatPinned: !chatPinned });
+    element.classList.toggle("open");
+  }
+
   getLastMsgNode() {
     let msgNodes = document.querySelectorAll('.message');
     return msgNodes[msgNodes.length - 1];
@@ -131,6 +139,11 @@ class Chat extends Component {
     };
     return (
       <div className="chat">
+        <input
+          type="button"
+          className="pin-chat"
+          onMouseDown={this.pinChat}
+          value={this.state.chatPinned ? 'Unpin' : 'Pin'}/>
         <div className="messages-wrapper">
           <div className="messages">
             <div className="message">
