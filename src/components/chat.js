@@ -81,10 +81,10 @@ class Chat extends Component {
   }
 
   onInputFocus(event) {
-    document.getElementsByClassName('chat')[0].style.height = "500px";;
+    document.getElementsByClassName('chat')[0].style.height = "100%";;
   }
   onInputFocusOut(event) {
-    document.getElementsByClassName('chat')[0].style.height = "40px";;
+    document.getElementsByClassName('chat')[0].style.height = "42px";;
   }
 
   updateScroll() {

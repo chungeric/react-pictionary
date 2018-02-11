@@ -10,6 +10,7 @@ class Canvas extends Component {
     this.findNewCoords = this.findNewCoords.bind(this);
     this.onClearBtnClick = this.onClearBtnClick.bind(this);
     this.clearCanvas = this.clearCanvas.bind(this);
+    this.updateCanvasDimensions = this.updateCanvasDimensions.bind(this);
     this.state = {
       ctx: null,
       x: 0,
@@ -33,6 +34,10 @@ class Canvas extends Component {
       this.clearCanvas();
     });
 
+    window.addEventListener('resize', this.updateCanvasDimensions);
+
+    /* TIMER STUFF */
+    
     // this.props.socket.on('connect', () => {
     //   if (this.props.numPlayers > 2) {
     //     this.setState({ timerFlag: true });
@@ -75,7 +80,8 @@ class Canvas extends Component {
     this.addCanvasEventListener("mouseup", canvas);
     this.addCanvasEventListener("mousemove", canvas);
     this.addCanvasEventListener("mouseout", canvas);
-
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.parentElement.clientHeight;
     return canvas.getContext("2d");
   }
 
@@ -143,16 +149,26 @@ class Canvas extends Component {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 
+  updateCanvasDimensions() {
+    var { ctx } = this.state;
+    var drawing = ctx.getImageData(0,0,ctx.canvas.parentElement.clientWidth,ctx.canvas.parentElement.clientWidth);
+    ctx.canvas.width = ctx.canvas.parentElement.clientWidth;
+    ctx.canvas.height = ctx.canvas.parentElement.clientHeight;
+    ctx.putImageData(drawing,0,0);
+    this.setState({ ctx });
+  }
+
   render() {
     return (
       <div className="canvas">
         <div className="canvas-wrapper">
           <Chat />
-          <canvas id="canvas" width="896" height="496"></canvas>
+          <canvas id="canvas"></canvas>
+          <div className="palette">
+            <button className="clear-btn" onClick={this.onClearBtnClick}>Clear</button>
+          </div>
         </div>
-        <div className="palette">
-          <button className="clear-btn" onClick={this.onClearBtnClick}>Clear</button>
-        </div>
+
       </div>
     );
   }

@@ -1,9 +1,9 @@
 .canvas {
-  .canvas-wrapper {
-    height: 500px;
+  .canvas-wrapper { // canvas parent
+    height: 90vh;
     // max-width: 900px;
     // height: auto;
-    width: 900px;
+    width: 90vw;
     overflow: hidden;
     position: relative;
     margin: 0 auto;
@@ -11,23 +11,25 @@
 
     canvas {
       background: white;
-      border: 2px solid #aeaeae;
     }
   }
 
   .palette {
-    margin-top: 20px;
+    padding: 5px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     .clear-btn {
       background-color: transparent;
       border: none;
-      color: white;
+      color: black;
       letter-spacing: 1px;
-      // font-weight: bold;
+      font-weight: bold;
       &:focus {
         outline: none;
       }
       &:hover {
-        color: #eee;
+        color: #444;
       }
     }
   }
