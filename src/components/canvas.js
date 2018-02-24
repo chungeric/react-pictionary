@@ -3,6 +3,7 @@ import css from '../../styles/canvas.scss';
 import Chat from './chat';
 // import io from 'socket.io-client';
 import { connect } from 'react-redux';
+import { startTimer } from '../lib/timer';
 
 class Canvas extends Component {
   constructor(props) {
@@ -37,42 +38,86 @@ class Canvas extends Component {
     window.addEventListener('resize', this.updateCanvasDimensions);
 
     /* TIMER STUFF */
-    
-    // this.props.socket.on('connect', () => {
-    //   if (this.props.numPlayers > 2) {
-    //     this.setState({ timerFlag: true });
-    //   }
-    // });
-    //
+
+    this.props.socket.on('connect', () => {
+      console.log(this.props.numPlayers);
+      if (this.props.numPlayers == 2 && !this.state.timerFlag) {
+
+        this.setState({ timerFlag: true });
+
+        this.gameTimer = setInterval( () => {
+          let { timer } = this.state;
+          if (timer == 0) {
+            timer = 10;
+          }
+          timer--;
+          // this.props.socket.emit('timer', { timer });
+          this.setState({ timer });
+          console.log(this.state.timer);
+
+        }, 1000);
+      }
+    });
+
+    this.props.socket.on('new-player-connected', ({ time }) => {
+      if (this.state.timerFlag == false) {
+        this.gameTimer = setInterval( () => {
+          let { timer } = this.state;
+          if (timer == 0) {
+            timer = 10;
+          }
+          timer--;
+          this.props.socket.emit('timer', { timer });
+          this.setState({ timer });
+          console.log(this.state.timer);
+
+        }, 1000);
+
+        this.setState({ timerFlag: true });
+      }
+    });
+
+
     // this.props.socket.on('timer', ({ timer }) => {
-    //   this.setState({ timer });
-    //   console.log(this.state.timer);
-    // });
-    //
-    // this.props.socket.on('connected', () => {
-    //   // if we are the only one connected when someone else connects
-    //   // start timer
-    //   if (this.props.numPlayers == 1 && !this.state.timerFlag) {
-    //     this.setState({ timerFlag: true });
-    //     this.props.socket.emit('flag');
-    //
-    //     this.gameTimer = setInterval( () => {
-    //       let { timer } = this.state;
-    //       if (timer == 0) {
-    //         timer = 10;
-    //       }
-    //       timer--;
-    //       this.props.socket.emit('timer', { timer });
-    //       this.setState({ timer });
-    //       console.log(this.state.timer);
-    //
-    //     }, 1000);
+    //   if (this.state.timerFlag == false) {
+    //     startTimer(timer);
+    //     console.log(timer);
     //   }
-    // });
     //
-    // this.props.socket.on('flag', () => {
     //   this.setState({ timerFlag: true });
+    //
+    //   // this.setState({ timer });
+    //   // console.log(this.state.timer);
     // });
+
+    this.props.socket.on('connected', () => {
+
+      // if we are the only one connected when someone else connects
+      // start timer
+      if (this.props.numPlayers == 2 && !this.state.timerFlag) {
+
+        this.setState({ timerFlag: true });
+        // this.props.socket.emit('flag');
+
+        this.gameTimer = setInterval( () => {
+          let { timer } = this.state;
+          if (timer == 0) {
+            timer = 10;
+          }
+          timer--;
+          // this.props.socket.emit('timer', { timer });
+          this.setState({ timer });
+          console.log(this.state.timer);
+
+        }, 1000);
+      } else if (this.props.numPlayers > 2) {
+        this.props.socket.emit('new-player-connected', { timer: this.state.timer });
+      }
+    });
+
+    this.props.socket.on('flag', () => {
+      this.setState({ timerFlag: true });
+    });
   }
 
   setupCanvas(canvas) {

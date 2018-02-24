@@ -47,9 +47,13 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('clear-canvas');
   });
 
-  // socket.on('timer', ({ timer }) => {
-  //   socket.broadcast.emit('timer', { timer });
-  // });
+  socket.on('timer', ({ timer }) => {
+    socket.broadcast.emit('timer', { timer });
+  });
+
+  socket.on('new-player-connected', ({ time }) => {
+    socket.emit('new-player-connected', { time });
+  });
 });
 
 server.listen(PORT, function(){
