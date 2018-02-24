@@ -24,37 +24,14 @@ class Chat extends Component {
     this.props.socket.on('connect', () => {
       const sessionId = this.props.socket.id.slice(0,4);
       this.setState({ sessionId });
-
-      // add to my player count in application state
-      this.props.addPlayer();
     });
-
 
     // NEW USER (NOT SELF) CONNECTED
     this.props.socket.on('connected', ({ sessionId }) => {
       this.getLastMsgNode().insertAdjacentHTML('afterend',
         `<div class='message'><p>${ sessionId.slice(0,4) } connected.</p></div>`
       );
-
-      // add to my player count in application state
-      this.props.addPlayer();
-
-      // send up to date number of players to everyone, so everyone is up to date
-      this.props.socket.emit('share-numplayers', ({ numPlayers: this.props.numPlayers }));
-
-      // updates number of players online displayed
-      this.updateNumOnline();
     });
-
-
-    // UPDATE MY SOCKET'S NUMPLAYERS STATE
-    this.props.socket.on('update-numplayers', ({ numPlayers }) => {
-      this.props.updatePlayers(numPlayers);
-
-      // updates number of players online displayed
-      this.updateNumOnline();
-    });
-
 
     // MESSAGE SENT BY ANOTHER PLAYER SHOULD BE DISPLAYED
     this.props.socket.on('message-sent', ({ message, sessionId }) => {
@@ -65,18 +42,11 @@ class Chat extends Component {
       );
     });
 
-
     // PLAYER DISCONNECTED
     this.props.socket.on('disconnected', ({ sessionId }) => {
       this.getLastMsgNode().insertAdjacentHTML('afterend',
         `<div class='message'><p>${ sessionId.slice(0,4) } disconnected.</p></div>`
       );
-
-      // deducts from player count in application state
-      this.props.removePlayer();
-
-      // updates number of players online displayed
-      this.updateNumOnline();
     });
   }
 
@@ -122,12 +92,6 @@ class Chat extends Component {
     return msgNodes[msgNodes.length - 1];
   }
 
-  updateNumOnline() {
-    document.querySelector(".message > .online").innerHTML = `<p class="online">
-      <strong><span style="color: #666;">${ this.props.numPlayers }</span></strong> players currently online.
-    </p>`;
-  }
-
   render() {
     const strongRed = {
       color: 'red',
@@ -152,7 +116,7 @@ class Chat extends Component {
                 Type something below and press enter to start chatting away!
               </p>
               <p className="online">
-                <span style={ strongGrey }>{ this.props ? this.props.numPlayers : '' }</span> players currently online.
+                <span style={ strongGrey }>{ this.props ? this.props.numPlayers : 0 }</span> players currently online.
               </p>
             </div>
           </div>
