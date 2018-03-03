@@ -27,9 +27,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // });
 
 io.on('connection', (socket) => {
+
   const mySessionId = socket.client.id;
 
+  var total = io.engine.clientsCount;
+  console.log(total);
+  socket.emit('update-player-count', total);
+
   socket.broadcast.emit('connected', { sessionId: mySessionId });
+
+
 
   socket.on('draw', ({ x, y, e }) => {
     socket.broadcast.emit('draw', { x, y, e });
@@ -38,7 +45,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('message-sent', {message, sessionId});
   });
   socket.on('share-numplayers', ({ numPlayers }) => {
-    socket.broadcast.emit('update-numplayers', { numPlayers });
+    socket.broadcast.emit('share-numplayers', { numPlayers });
   });
   socket.on('disconnect', () => {
     socket.broadcast.emit('disconnected', { sessionId: mySessionId });
@@ -47,8 +54,8 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('clear-canvas');
   });
 
-  socket.on('timer', ({ timer }) => {
-    socket.broadcast.emit('timer', { timer });
+  socket.on('timer', ( timer ) => {
+    socket.broadcast.emit('timer', timer);
   });
 
   socket.on('new-player-connected', ({ time }) => {

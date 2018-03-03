@@ -17,7 +17,15 @@ class PlayerHandler extends Component {
     this.props.socket.on('connected', () => {
 
       this.props.addPlayer();
-      this.props.socket.emit('share-numplayers', ({ numPlayers: this.props.numPlayers }));
+      // this.props.socket.emit('share-numplayers', ({ numPlayers: this.props.numPlayers }));
+
+    });
+
+    this.props.socket.on('update-player-count', ( total ) => {
+
+      this.props.updatePlayers(total);
+      // this.props.socket.emit('share-numplayers', ( total ));
+
     });
 
     this.props.socket.on('disconnect', () => {
@@ -32,11 +40,11 @@ class PlayerHandler extends Component {
 
     });
 
-    this.props.socket.on('update-numplayers', ({ numPlayers }) => {
-
-      this.props.updatePlayers(numPlayers);
-      
-    });
+    // this.props.socket.on('share-numplayers', ({ numPlayers }) => {
+    //
+    //   this.props.updatePlayers(numPlayers);
+    //
+    // });
 
 
   }

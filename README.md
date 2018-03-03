@@ -35,3 +35,4 @@ Also need to figure out how to make canvas area the same on all computer screens
 **Ideas:**
 
 - Add **user turns** functionality so that I can collect every drawing point the user makes in Redux state, share with all sockets, and redraw a scaled version on the resized canvas when the window is resized by anyone
+- Start a timer only on the drawer's socket. Guessers get sent the current time every second through a socket emit

@@ -205,9 +205,9 @@ class Canvas extends Component {
     return (
       <div className="canvas">
         <div className="canvas-wrapper">
+          <PlayerHandler />
           <Chat />
           <Timer />
-          <PlayerHandler />
           <canvas id="canvas"></canvas>
           <div className="palette">
             <button className="clear-btn" onClick={this.onClearBtnClick}>Clear</button>
