@@ -4,6 +4,8 @@ This is my attempt at creating a real-time multiplayer pictionary game using Rea
 
 **Live demo: <https://scribbz.herokuapp.com/>**
 
+**Trello board: <https://trello.com/b/kPIuXImV/pictionary>**
+
 ## Other tools used
 
 - socket.io
