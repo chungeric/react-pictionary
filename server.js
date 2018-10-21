@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
   const mySessionId = socket.client.id;
 
   var total = io.engine.clientsCount;
-  console.log(total);
+  // console.log(total);
   socket.emit('update-player-count', total);
 
   socket.broadcast.emit('connected', { sessionId: mySessionId });
