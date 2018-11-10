@@ -1,17 +1,9 @@
 import {
-  ADD_PLAYER,
   REMOVE_PLAYER,
   UPDATE_PLAYERS,
   ADD_STROKE,
   CLEAR_STROKES
 } from './types';
-
-export function addPlayer() {
-  return {
-    type: ADD_PLAYER,
-    payload: null
-  };
-}
 
 export function removePlayer() {
   return {

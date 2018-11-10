@@ -24,7 +24,7 @@ io.on('connection', (socket) => {
 
   var total = io.engine.clientsCount;
 
-  socket.emit('update-player-count', total);
+  io.sockets.emit('update-player-count', total);
 
   socket.broadcast.emit('connected', { sessionId: mySessionId });
 
