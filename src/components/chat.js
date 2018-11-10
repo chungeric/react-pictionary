@@ -107,10 +107,13 @@ class Chat extends Component {
         <div className="messages-wrapper">
           <div className="messages">
             <div className="message">
-              <p className="welcome">
+              <p className="title">
+                React Pictionary
+              </p>
+              <div className="welcome">
                 @: Welcome to the chat <strong><span style={ strongRed }>&lt;{ this.state.sessionId ? this.state.sessionId : '' }&gt;</span></strong>.
                 Type something below and press enter to start chatting away!
-              </p>
+              </div>
               <p className="online">
                 <span style={ strongGrey }>{ this.props ? this.props.numPlayers : 0 }</span> players currently online.
               </p>
