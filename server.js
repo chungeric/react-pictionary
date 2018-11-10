@@ -15,34 +15,24 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, '/dist')));
 app.use(webpackDevMiddleware(webpack(webpackConfig)));
 app.use(bodyParser.urlencoded({ extended: false }));
-/* SSL redirect did not work (copy pasta) */
-// app.configure('production', => {
-//   app.use((req, res, next) => {
-//     if (req.header 'x-forwarded-proto' !== 'https') {
-//       res.redirect(`https://${req.header('host')}${req.url}`);
-//     } else {
-//       next();
-//     }
-//   });
-// });
 
 io.on('connection', (socket) => {
+
+  console.log('%s sockets connected.', io.engine.clientsCount);
 
   const mySessionId = socket.client.id;
 
   var total = io.engine.clientsCount;
-  // console.log(total);
+
   socket.emit('update-player-count', total);
 
   socket.broadcast.emit('connected', { sessionId: mySessionId });
-
-
 
   socket.on('draw', ({ x, y, e }) => {
     socket.broadcast.emit('draw', { x, y, e });
   });
   socket.on('message-sent', ({message, sessionId}) => {
-    socket.broadcast.emit('message-sent', {message, sessionId});
+    socket.broadcast.emit('message-sent', { message, sessionId });
   });
   socket.on('share-numplayers', ({ numPlayers }) => {
     socket.broadcast.emit('share-numplayers', { numPlayers });

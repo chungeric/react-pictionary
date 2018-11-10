@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { ADD_PLAYER, REMOVE_PLAYER, UPDATE_PLAYERS } from '../actions';
+import { ADD_PLAYER, REMOVE_PLAYER, UPDATE_PLAYERS } from '../actions/types';
 
 export default function(state = 0, action) {
   switch(action.type) {

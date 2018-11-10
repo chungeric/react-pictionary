@@ -1,23 +1,10 @@
-// export const DRAW_STROKE = 'stroke_drawn';
-// export const CLEAR_STROKES = 'clear_strokes';
-//
-// export function drawStroke(strokes) {
-//   return {
-//     type: DRAW_STROKE,
-//     payload: []
-//   };
-// }
-//
-// export function clearStrokes() {
-//   return {
-//     type: CLEAR_STROKES,
-//     payload: null
-//   };
-// }
-
-export const ADD_PLAYER = 'add_player';
-export const REMOVE_PLAYER = 'remove_player';
-export const UPDATE_PLAYERS = 'update_players';
+import {
+  ADD_PLAYER,
+  REMOVE_PLAYER,
+  UPDATE_PLAYERS,
+  ADD_STROKE,
+  CLEAR_STROKES
+} from './types';
 
 export function addPlayer() {
   return {
@@ -38,4 +25,21 @@ export function updatePlayers(numPlayers) {
     type: UPDATE_PLAYERS,
     payload: numPlayers
   };
+}
+
+export function storeStroke(x, y, movementType) {
+  return {
+    type: ADD_STROKE,
+    payload: {
+      position: [x, y],
+      movementType
+    }
+  };
+}
+
+export function clearStrokes() {
+  return {
+    type: CLEAR_STROKES,
+    payload: null
+  }
 }

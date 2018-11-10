@@ -3,9 +3,8 @@ import css from '../../styles/canvas.scss';
 import Chat from './chat';
 import Timer from './timer';
 import PlayerHandler from './playerHandler';
-// import io from 'socket.io-client';
 import { connect } from 'react-redux';
-
+import { storeStroke, clearStrokes } from '../actions';
 
 class Canvas extends Component {
   constructor(props) {
@@ -36,86 +35,6 @@ class Canvas extends Component {
     });
 
     window.addEventListener('resize', this.updateCanvasDimensions);
-
-    /* TIMER STUFF */
-
-    // this.props.socket.on('connect', () => {
-    //   if (this.props.numPlayers == 2 && !this.state.timerFlag) {
-    //     this.setState({ timerFlag: true });
-    //
-    //     this.gameTimer = setInterval( () => {
-    //       let { timer } = this.state;
-    //       if (timer == 0) {
-    //         timer = 10;
-    //       }
-    //       timer--;
-    //       // this.props.socket.emit('timer', { timer });
-    //       this.setState({ timer });
-    //       console.log(this.state.timer);
-    //
-    //     }, 1000);
-    //   }
-    // });
-
-    // this.props.socket.on('new-player-connected', ({ time }) => {
-    //   console.log('3');
-    //   if (this.state.timerFlag == false) {
-    //     this.gameTimer = setInterval( () => {
-    //       let { timer } = this.state;
-    //       if (timer == 0) {
-    //         timer = 10;
-    //       }
-    //       timer--;
-    //       this.props.socket.emit('timer', { timer });
-    //       this.setState({ timer });
-    //       console.log(this.state.timer);
-    //
-    //     }, 1000);
-    //
-    //     this.setState({ timerFlag: true });
-    //   }
-    // });
-
-
-    // this.props.socket.on('timer', ({ timer }) => {
-    //   if (this.state.timerFlag == false) {
-    //     startTimer(timer);
-    //     console.log(timer);
-    //   }
-    //
-    //   this.setState({ timerFlag: true });
-    //
-    //   // this.setState({ timer });
-    //   // console.log(this.state.timer);
-    // });
-
-    // this.props.socket.on('connected', () => {
-    //   // if we are the only one connected when someone else connects
-    //   // start timer
-    //   if (this.props.numPlayers == 2 && !this.state.timerFlag) {
-    //
-    //     this.setState({ timerFlag: true });
-    //     // this.props.socket.emit('flag');
-    //
-    //     this.gameTimer = setInterval( () => {
-    //       let { timer } = this.state;
-    //       if (timer == 0) {
-    //         timer = 10;
-    //       }
-    //       timer--;
-    //       // this.props.socket.emit('timer', { timer });
-    //       this.setState({ timer });
-    //       console.log(this.state.timer);
-    //
-    //     }, 1000);
-    //   } else if (this.props.numPlayers > 2) {
-    //     this.props.socket.emit('new-player-connected', { timer: this.state.timer });
-    //   }
-    // });
-
-    // this.props.socket.on('flag', () => {
-    //   this.setState({ timerFlag: true });
-    // });
   }
 
   setupCanvas(canvas) {
@@ -139,12 +58,16 @@ class Canvas extends Component {
     if (e == "mousedown") {
       ctx.beginPath();
       ctx.moveTo(x, y);
+      this.props.storeStroke(x, y, 'start');
+      console.log(this.props.strokes);
     }
     else if (e == "mousemove") {
       ctx.lineTo(x, y);
       ctx.strokeStyle = "black";
       ctx.lineWidth = 2;
       ctx.stroke();
+      this.props.storeStroke(x, y, 'move');
+      console.log(this.props.strokes);
     }
     else if (e == "mouseout" || e == "mouseup" ) {
       ctx.closePath();
@@ -160,13 +83,11 @@ class Canvas extends Component {
       pressed = true;
       this.setState({ x, y, pressed });
       this.draw(x, y, e);
-      // this.socket.emit('draw', { x, y, e });
       this.props.socket.emit('draw', { x, y, e });
     }
 
     if (e == "mouseout" || e == "mouseup") {
       this.draw(x, y, e);
-      // this.socket.emit('draw', { x, y, e });
       this.props.socket.emit('draw', { x, y, e });
       this.setState({pressed: false});
     }
@@ -176,13 +97,13 @@ class Canvas extends Component {
       y = mouse.offsetY;
       this.setState({ x, y });
       this.draw(x, y, e);
-      // this.socket.emit('draw', { x, y, e });
       this.props.socket.emit('draw', { x, y, e });
     }
   }
 
   onClearBtnClick() {
     this.clearCanvas();
+    this.props.clearStrokes();
     this.props.socket.emit('clear-canvas');
   }
 
@@ -207,24 +128,22 @@ class Canvas extends Component {
         <div className="canvas-wrapper">
           <PlayerHandler />
           <Chat />
-          <Timer />
+          {/* <Timer /> */}
           <canvas id="canvas"></canvas>
           <div className="palette">
             <button className="clear-btn" onClick={this.onClearBtnClick}>Clear</button>
           </div>
         </div>
-
       </div>
     );
   }
 }
 
-
 function mapStateToProps(state) {
   return {
     socket: state.socket,
-    numPlayers: state.numPlayers
+    strokes: state.strokes
   };
 }
 
-export default connect(mapStateToProps)(Canvas);
+export default connect(mapStateToProps, { storeStroke, clearStrokes })(Canvas);

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import css from '../../styles/chat.scss';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { addPlayer, removePlayer, updatePlayers } from '../actions';
 
 class Chat extends Component {
   constructor(props) {
@@ -18,8 +16,6 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-
-
     // SELF CONNECTED
     this.props.socket.on('connect', () => {
       const sessionId = this.props.socket.id.slice(0,4);
@@ -137,16 +133,10 @@ class Chat extends Component {
   }
 }
 
-
 function mapStateToProps(state) {
   return {
     socket: state.socket,
     numPlayers: state.numPlayers
   };
 }
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addPlayer, removePlayer, updatePlayers }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Chat);
+export default connect(mapStateToProps, {})(Chat);
