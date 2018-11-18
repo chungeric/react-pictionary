@@ -6,7 +6,6 @@ import { removePlayer, updatePlayerCount } from '../actions';
 class PlayerHandler extends Component {
   componentDidMount() {
     this.props.socket.on('update-player-count', ( total ) => {
-      console.log('UPDATE!!!!');
       this.props.updatePlayerCount(total);
     });
     this.props.socket.on('disconnected', () => {

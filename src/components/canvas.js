@@ -103,14 +103,17 @@ class Canvas extends Component {
 
   onClearBtnClick() {
     this.clearCanvas();
+    // Clear strokes in redux state
     this.props.clearStrokes();
+    // Emit clear-strokes event to all connected sockets
     this.props.socket.emit('clear-canvas');
   }
 
   clearCanvas() {
-    console.log('clear');
     let { ctx } = this.state;
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    // Clear strokes in redux state
+    this.props.clearStrokes();
   }
 
   updateCanvasDimensions() {
