@@ -4,7 +4,7 @@
   "description": "This is my attempt at creating a real-time multiplayer pictionary game using React and Redux.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "nodemon server/server.js",
     "build": "webpack"
   },
   "repository": {

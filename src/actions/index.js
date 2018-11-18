@@ -1,21 +1,14 @@
 import {
-  REMOVE_PLAYER,
-  UPDATE_PLAYERS,
+  UPDATE_PLAYER_COUNT,
   ADD_STROKE,
-  CLEAR_STROKES
+  CLEAR_STROKES,
+  UPDATE_STROKES
 } from './types';
 
-export function removePlayer() {
+export function updatePlayerCount(newPlayerCount) {
   return {
-    type: REMOVE_PLAYER,
-    payload: null
-  };
-}
-
-export function updatePlayers(numPlayers) {
-  return {
-    type: UPDATE_PLAYERS,
-    payload: numPlayers
+    type: UPDATE_PLAYER_COUNT,
+    payload: newPlayerCount
   };
 }
 
@@ -33,5 +26,12 @@ export function clearStrokes() {
   return {
     type: CLEAR_STROKES,
     payload: null
+  }
+}
+
+export function updateStrokes(strokes) {
+  return {
+    type: UPDATE_STROKES,
+    payload: strokes
   }
 }

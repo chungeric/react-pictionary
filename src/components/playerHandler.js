@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { removePlayer, updatePlayers } from '../actions';
+import { removePlayer, updatePlayerCount } from '../actions';
 
 class PlayerHandler extends Component {
   componentDidMount() {
     this.props.socket.on('update-player-count', ( total ) => {
       console.log('UPDATE!!!!');
-      this.props.updatePlayers(total);
+      this.props.updatePlayerCount(total);
     });
     this.props.socket.on('disconnected', () => {
       this.props.removePlayer();
@@ -24,5 +24,5 @@ function mapStateToProps(state) {
 }
 export default connect(mapStateToProps, {
   removePlayer,
-  updatePlayers
+  updatePlayerCount
 })(PlayerHandler);

@@ -18,6 +18,7 @@ module.exports = {
     contentBase: "./dist"
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin()
     // new webpack.optimize.UglifyJsPlugin({minimize: true})
   ]
 }
