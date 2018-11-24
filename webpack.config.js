@@ -15,7 +15,7 @@ module.exports = {
   },
   devServer: {
     publicPath: "/",
-    contentBase: "./dist"
+    contentBase: "./public"
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()

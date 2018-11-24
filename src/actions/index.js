@@ -1,5 +1,6 @@
 import {
   UPDATE_PLAYER_COUNT,
+  REMOVE_PLAYER,
   ADD_STROKE,
   CLEAR_STROKES,
   UPDATE_STROKES
@@ -9,6 +10,13 @@ export function updatePlayerCount(newPlayerCount) {
   return {
     type: UPDATE_PLAYER_COUNT,
     payload: newPlayerCount
+  };
+}
+
+export function removePlayer() {
+  return {
+    type: REMOVE_PLAYER,
+    payload: null
   };
 }
 

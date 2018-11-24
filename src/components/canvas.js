@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import css from '../../styles/canvas.scss';
 import Chat from './chat';
-import Timer from './timer';
-import PlayerHandler from './playerHandler';
 import { connect } from 'react-redux';
 import { storeStroke, clearStrokes } from '../actions';
 
@@ -129,9 +127,7 @@ class Canvas extends Component {
     return (
       <div className="canvas">
         <div className="canvas-wrapper">
-          <PlayerHandler />
           <Chat />
-          {/* <Timer /> */}
           <canvas id="canvas"></canvas>
           <div className="palette">
             <button className="clear-btn" onClick={this.onClearBtnClick}>Clear</button>
