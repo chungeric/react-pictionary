@@ -52,9 +52,16 @@
 
         .title {
           margin-top: 35px;
-          font-size: 35px;
-          line-height: 42px;
+          font-size: 24px;
+          line-height: 34px;
           padding-right: 10px;
+          letter-spacing: 4px;
+          span {
+            display: block;
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 6px;
+          }
         }
 
         .welcome {

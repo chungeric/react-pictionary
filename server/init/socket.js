@@ -1,18 +1,18 @@
 module.exports = (io) => {
   // On init socket connection
-  io.on('connection', function(socket) {
+  io.of('/game').on('connection', async (socket) => {
     console.log('%s sockets connected.', io.engine.clientsCount);
     // Current socket's socket ID
     const sessionId = socket.client.id;
     // Total number of web sockets / clients connected
-    var total = io.engine.clientsCount;
+    const total = io.engine.clientsCount;
     // Update all sockets playerCount when new player connects
-    io.sockets.emit('update-player-count', total);
+    io.of('/game').emit('update-player-count', total);
     // When the current web socket disconnects, emit disconnected event to let
     // other sockets know and remove one from the player count in firebase
     socket.on('disconnect', () => {
-      console.log('disconnected on server');
       socket.broadcast.emit('disconnected', { total, sessionId });
+      console.log('Socket: %s disconnected.', socket.id);
     });
     // Emit connected event so all sockets can see a new person has connected
     socket.broadcast.emit('connected', { sessionId });
@@ -24,16 +24,16 @@ module.exports = (io) => {
       socket.broadcast.emit('draw', { x, y, e });
     });
     // When someone sends a message, update all sockets with the message in chat
-    socket.on('message-sent', ({message, sessionId}) => {
-      socket.broadcast.emit('message-sent', { message, sessionId });
+    socket.on('message-sent', ({ message, sessionId: senderId }) => {
+      socket.broadcast.emit('message-sent', { message, senderId });
     });
     // Clear canvas event
     socket.on('clear-canvas', () => {
       socket.broadcast.emit('clear-canvas');
     });
     // Timer event
-    socket.on('timer', ( timer ) => {
+    socket.on('timer', (timer) => {
       socket.broadcast.emit('timer', timer);
     });
   });
-}
+};

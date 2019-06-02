@@ -3,20 +3,21 @@ import {
   REMOVE_PLAYER,
   ADD_STROKE,
   CLEAR_STROKES,
-  UPDATE_STROKES
+  UPDATE_STROKES,
+  CREATE_SOCKET,
 } from './types';
 
 export function updatePlayerCount(newPlayerCount) {
   return {
     type: UPDATE_PLAYER_COUNT,
-    payload: newPlayerCount
+    payload: newPlayerCount,
   };
 }
 
 export function removePlayer() {
   return {
     type: REMOVE_PLAYER,
-    payload: null
+    payload: null,
   };
 }
 
@@ -25,21 +26,28 @@ export function storeStroke(x, y, movementType) {
     type: ADD_STROKE,
     payload: {
       position: [x, y],
-      movementType
-    }
+      movementType,
+    },
   };
 }
 
 export function clearStrokes() {
   return {
     type: CLEAR_STROKES,
-    payload: null
-  }
+    payload: null,
+  };
 }
 
 export function updateStrokes(strokes) {
   return {
     type: UPDATE_STROKES,
-    payload: strokes
-  }
+    payload: strokes,
+  };
+}
+
+export function createSocket(socket) {
+  return {
+    type: CREATE_SOCKET,
+    payload: socket,
+  };
 }

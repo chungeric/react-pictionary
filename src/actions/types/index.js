@@ -3,3 +3,4 @@ export const REMOVE_PLAYER = 'REMOVE_PLAYER';
 export const ADD_STROKE = 'ADD_STROKE';
 export const CLEAR_STROKES = 'CLEAR_STROKES';
 export const UPDATE_STROKES = 'UPDATE_STROKES';
+export const CREATE_SOCKET = 'CREATE_SOCKET';

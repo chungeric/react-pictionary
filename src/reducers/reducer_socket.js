@@ -1,6 +1,12 @@
-import io from 'socket.io-client';
-const socket = io();
+import { CREATE_SOCKET } from '../actions/types';
 
-export default function() {
-  return socket;
+export default function (state = null, action) {
+  switch (action.type) {
+    case CREATE_SOCKET: {
+      return action.payload;
+    }
+    default: {
+      return state;
+    }
+  }
 }

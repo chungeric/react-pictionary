@@ -6,7 +6,7 @@ import NumPlayersReducer from './reducer_numplayers';
 const rootReducer = combineReducers({
   socket: SocketReducer,
   numPlayers: NumPlayersReducer,
-  strokes: StrokeReducer
+  strokes: StrokeReducer,
 });
 
 export default rootReducer;
