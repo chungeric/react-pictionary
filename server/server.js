@@ -17,6 +17,6 @@ const io = socketIo(httpServer, {
 // Initialise socket events
 initSocketIoEvents(io);
 
-httpServer.listen(app.get('port'), () => {
-  console.log(`listening on port: ${app.get('port')}`);
+httpServer.listen(process.env.PORT || 3000, () => {
+  console.log(`listening on port: ${process.env.PORT || 3000}`);
 });
