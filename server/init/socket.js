@@ -25,7 +25,7 @@ module.exports = (io) => {
     });
     // When someone sends a message, update all sockets with the message in chat
     socket.on('message-sent', ({ message, sessionId: senderId }) => {
-      socket.broadcast.emit('message-sent', { message, senderId });
+      socket.broadcast.emit('message-sent', { message, sessionId: senderId });
     });
     // Clear canvas event
     socket.on('clear-canvas', () => {
