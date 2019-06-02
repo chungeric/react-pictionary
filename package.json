@@ -21,6 +21,7 @@
   "dependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.2",
     "lodash": "^4.17.4",
@@ -39,7 +40,6 @@
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-eslint": "^10.0.1",
-    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.8",
