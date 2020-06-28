@@ -1,10 +1,27 @@
 .app {
+  position: relative;
   width: 100vw;
   height: 100vh;
-  background: #355C7D;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(340deg, #C06C84, #6C5B7B, #355C7D);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(340deg, #C06C84, #6C5B7B, #355C7D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+  background: #7076BD;  /* fallback for old browsers */
+  // background: -webkit-linear-gradient(to left, #94716B, #B79891);  /* Chrome 10-25, Safari 5.1-6 */
+  // background: linear-gradient(to left, #94716B, #B79891); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  .entry-link {
+    position: relative;
+    display: inline-block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+    padding: 10px 20px;
+    font-weight: bold;
+    border: 2px solid black;
+    background-color: white;
+    text-decoration: none;
+    transition: all .4s ease;
+    &:hover {
+      top: calc(50% - 4px);
+    }
+  }
   .wrapper {
     // max-width: 900px;
     position: absolute;

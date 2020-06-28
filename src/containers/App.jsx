@@ -15,8 +15,8 @@ class App extends Component {
     return (
       <div className="app">
         <Switch>
-          <Route exact path="/" render={routeProps => <LandingPage {...routeProps} />} />
-          <Route path="/game" render={routeProps => <Game {...routeProps} />} />
+          <Route exact path="/" render={routeProps => <Game {...routeProps} />} />
+          {/* <Route path="/game" render={routeProps => <Game {...routeProps} />} /> */}
         </Switch>
       </div>
     );
